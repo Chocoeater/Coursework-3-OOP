@@ -25,11 +25,12 @@ class HeadHunterAPI(BaseHeadHunterAPI):
 
     def get_vacancies(self, keyword):
         self.params['text'] = keyword
-        while self.params.get('page') != 20:
+        while self.params.get('page') != 2:
             response = requests.get(self.url, headers=self.headers, params=self.params)
             vacancies = response.json()['items']
             self.vacancies.extend(vacancies)
             self.params['page'] += 1
+        return self.vacancies
 
 
 if __name__ == '__main__':
