@@ -59,26 +59,61 @@ class BaseVacancy(ABC):
 
 class Vacancy(BaseVacancy):
 
-    def __init__(self, name: str, url: str, solary: int, description: str, requirements: str):
+    def __init__(self, name: str, url: str, salary: int, description: str, requirements: str):
         self.name = name
         self.url = url
-        self.solary = solary
+        self.salary = salary
         self.description = description
         self.requirements = requirements
 
     @classmethod
     def get_vacancy(cls, json_str: dict):
         return cls(name=json_str['name'], url=json_str['alternate_url'],
-                   solary=json_str['salary'] if json_str['salary'] else 0, description=json_str['snippet']['responsibility'],
+                   salary=json_str['salary'] if json_str['salary'] else 0, description=json_str['snippet']['responsibility'],
                    requirements=json_str['snippet']['requirement'])
 
     @classmethod
     def cast_to_object_list(cls, vacancies: list) -> list:
         return [cls.get_vacancy(vacancy_dict) for vacancy_dict in vacancies]
 
+    @staticmethod
+    def _get_left_right(left: int | dict, right: int | dict) -> tuple:
+        if left:
+            left = left['from']
+        if right:
+            right = right['from']
+        return left, right
+
+    def __eq__(self, other):
+        left, right = self._get_left_right(self.salary, other.salary)
+        return left == right
+
+    def __ne__(self, other):
+        left, right = self._get_left_right(self.salary, other.salary)
+        return left != right
+
+    def __lt__(self, other):
+        left, right = self._get_left_right(self.salary, other.salary)
+        return left < right
+
+    def __le__(self, other):
+        left, right = self._get_left_right(self.salary, other.salary)
+        return left <= right
+
+    def __gt__(self, other):
+        left, right = self._get_left_right(self.salary, other.salary)
+        return left > right
+
+    def __ge__(self, other):
+        left, right = self._get_left_right(self.salary, other.salary)
+        return left >= right
+
+
 
 if __name__ == '__main__':
     hh_api = HeadHunterAPI()
     hh_vacancies = hh_api.get_vacancies('Python')
     vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
-    print(vacancies_list)
+    listik = [vac.salary for vac in vacancies_list]
+    print(listik)
+    print([listik[0] == listik[i] for i in range(len(listik))])
