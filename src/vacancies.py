@@ -108,6 +108,21 @@ class Vacancy(BaseVacancy):
         left, right = self._get_left_right(self.salary, other.salary)
         return left >= right
 
+    def to_dict(self) -> dict:
+        """
+        Возвращает словарь с атрибутами объекта
+        :return: Словарь с атрибутами
+        """
+        data = {
+            'name': self.name,
+            'url': self.url,
+            'salary': self.salary,
+            'description': self.description,
+            'requirements': self.requirements
+        }
+        return data
+
+
 
 
 if __name__ == '__main__':
