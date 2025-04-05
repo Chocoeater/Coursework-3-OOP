@@ -77,7 +77,7 @@ class JSONSaver(BaseJSONSaver):
 
         if salary:
             result = [
-                vac for vac in result if v.get('salary', {}).get('from', 0) >= salary
+                vac for vac in result if vac.get('salary', {}).get('from', 0) >= salary
             ]
 
         return result
