@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import requests
+from requests.exceptions import HTTPError, RequestException
 
 
 class BaseHeadHunterAPI(ABC):
@@ -8,32 +9,51 @@ class BaseHeadHunterAPI(ABC):
     """
 
     @abstractmethod
+    def __connect_to_API(self, keyword: str) -> None:
+        """
+        Подключается к API hh.ru и сохраняет вакансии в список
+        :param keyword: Ключевое слово для поиска вакансий
+        :return: None
+        """
+    @abstractmethod
     def get_vacancies(self, keyword: str) -> str:
         """
-        Получает вакансии с hh.ru
+        Возвращает список собранных вакансий при помощи API
         :param keyword: Ключевое слово для поиска
-        :return: Строка в формате JSON
+        :return: Список словарей с вакансиями
         """
 
 
 class HeadHunterAPI(BaseHeadHunterAPI):
     def __init__(self):
-        self.url = "https://api.hh.ru/vacancies"
-        self.headers = {'User-Agent': 'HH-User-Agent'}
-        self.params = {'text': '', 'page': 0, 'per_page': 100}
-        self.vacancies = []
+        self.__url = "https://api.hh.ru/vacancies"
+        self.__headers = {'User-Agent': 'HH-User-Agent'}
+        self.__params = {'text': '', 'page': 0, 'per_page': 100}
+        self.__vacancies = []
 
-    def get_vacancies(self, keyword):
-        self.params['text'] = keyword
-        while self.params.get('page') != 2:
-            response = requests.get(self.url, headers=self.headers, params=self.params)
-            vacancies = response.json()['items']
-            self.vacancies.extend(vacancies)
-            self.params['page'] += 1
-        return self.vacancies
+    def __connect_to_API(self, keyword, pages=1):
+        self.__params['text'] = keyword
+        try:
+            while self.__params.get('page') != pages:
+                response = requests.get(self.__url, headers=self.__headers, params=self.__params)
+                response.raise_for_status()
+                vacancies = response.json().get('items', '')
+                self.__vacancies.extend(vacancies)
+                self.__params['page'] += 1
+        except HTTPError as e:
+            print(f"Ошибка API: {e}")
+            return None
+        except RequestException as e:
+            print(f'Сетевая ошибка: {e}')
+            return None
+
+
+    def get_vacancies(self, keyword, pages=1):
+        self.__connect_to_API(keyword, pages)
+        return self.__vacancies
 
 
 if __name__ == '__main__':
     hh_api = HeadHunterAPI()
     hh_api.get_vacancies('Python')
-    print(hh_api.vacancies)
+    print(hh_api.__vacancies)

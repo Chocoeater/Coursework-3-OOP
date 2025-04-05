@@ -4,6 +4,16 @@ from src.head_hunter_api import HeadHunterAPI
 
 
 class BaseVacancy(ABC):
+    __slots__ = ['name', ' url', 'salary', 'description', 'requirements']
+
+    @abstractmethod
+    def __validation_salary(self, salary: int | None) -> int:
+        """
+        Валидирует значения заработной платы. Если заработная плата не задана, возвращает 0
+        :param salary: Заработная плата
+        :return: 0 или значение заработной платы
+        """
+        pass
 
     @classmethod
     @abstractmethod
@@ -62,14 +72,20 @@ class Vacancy(BaseVacancy):
     def __init__(self, name: str, url: str, salary: int, description: str, requirements: str):
         self.name = name
         self.url = url
-        self.salary = salary
+        self.salary = self.__validation_salary(salary)
         self.description = description
         self.requirements = requirements
+
+    def __validation_salary(self, salary: int | None) -> int:
+        if salary:
+            return int(salary)
+        else:
+            return 0
 
     @classmethod
     def get_vacancy(cls, json_str: dict):
         return cls(name=json_str['name'], url=json_str['alternate_url'],
-                   salary=json_str['salary'] if json_str['salary'] else 0, description=json_str['snippet']['responsibility'],
+                   salary=json_str['salary'], description=json_str['snippet']['responsibility'],
                    requirements=json_str['snippet']['requirement'])
 
     @classmethod

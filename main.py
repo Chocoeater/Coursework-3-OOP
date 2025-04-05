@@ -9,5 +9,5 @@ if __name__ == '__main__':
     vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
     print(vacancies_list)
     json_saver = JSONSaver()
-    json_saver.add_vacancy(vacancies_list[0])
-    json_saver.add_vacancy(vacancies_list[1])
+    for vac in vacancies_list:
+        json_saver.add_vacancy(vac)
