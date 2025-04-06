@@ -54,15 +54,15 @@ class JSONSaver(BaseJSONSaver):
             vacancies.append(vacancy_data)
             self._save_vacancies(vacancies)
 
-    def delete_vacancy(self, vacancy: Vacancy) -> bool:
+    def delete_vacancy(self, url: str) -> bool:
         vacancies = self._load_vacancies()
         old_len_of_vacancies = len(vacancies)
-        update_vacancies = [vac for vac in vacancies if vac.get('url') != vacancy.url]
+        update_vacancies = [vac for vac in vacancies if vac.get('url') != url]
         if len(update_vacancies) == old_len_of_vacancies:
             return False
         self._save_vacancies(update_vacancies)
 
-    def search_vacancies(self, keyword: str = None, salary: str = None) -> List[Dict]:
+    def search_vacancies(self, keyword: str = None, salary: int = None) -> List[Dict]:
         """Поиск по вакансиям"""
         vacancies = self._load_vacancies()
         result = vacancies
@@ -81,3 +81,7 @@ class JSONSaver(BaseJSONSaver):
             ]
 
         return result
+
+    def get_all_vacancies(self) -> List[Dict]:
+        """Публичный метод для получения всех вакансий в файле"""
+        return self._load_vacancies()
