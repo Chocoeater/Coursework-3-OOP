@@ -3,39 +3,10 @@ from src.json_saver import JSONSaver
 from src.vacancies import Vacancy
 
 
-# def user_interaction():
-#     search_query = input('Введите поисковой запрос: ')
-#     top_n = int(input('Введите количество вакансий для вывода: '))
-#     filter_word = input('Введите ключевое слово для фильтрации вакансий: ')
-#     salary = int(input('Введите минимальный порог для заработной платы в рублях: '))
-#
-#     hh_api = HeadHunterAPI()
-#     hh_vacancies = hh_api.get_vacancies(search_query, 3)
-#     vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
-#
-#     json_saver = JSONSaver()
-#     for vac in vacancies_list:
-#         json_saver.add_vacancy(vac)
-#
-#     json_saver.search_vacancies(keyword=filter_word, salary=salary)
-
 def salary_print(salary: dict):
     if salary['from'] == 0 and salary['to'] == 0:
         return 'Не указана'
     return f'от {salary["from"]} до {salary["to"]}'
-
-
-def vacancies_print(vacancies_list: list, count_print: int):
-    for vac in vacancies_list:
-        while count_print:
-            print(f"""
-                    Название вакансии: {vac.name}
-                    Ссылка на вакансию: {vac.url}
-                    Заработная плата: {salary_print(vac.salary)}
-                    Описание: {vac.description}
-                    Требования: {vac.requirements}
-                    """)
-            count_print -= 1
 
 
 def user_interaction():
@@ -152,6 +123,7 @@ def search_vacancies_in_hh(saver: JSONSaver):
             # Выводим текущую страницу (10 вакансий)
             print("\n=== Найденные вакансии ===")
             for i, vacancy in enumerate(all_vacancies[start_idx:start_idx + 10], start_idx + 1):
+                print(vacancy.to_dict())
                 print(f"""
                     {i}
                     {vacancy.name}

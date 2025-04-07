@@ -7,7 +7,7 @@ class BaseVacancy(ABC):
     __slots__ = ('name', 'area', 'url', 'salary', 'description', 'requirements')
 
     @abstractmethod
-    def __validation_salary(self, salary: dict | None) -> int:
+    def _validation_salary(self, salary: dict | None) -> int:
         """
         Валидирует значения заработной платы. Если заработная плата не задана, возвращает 0
         :param salary: Заработная плата
@@ -71,14 +71,17 @@ class Vacancy(BaseVacancy):
     def __init__(self, name: str, area: str, url: str, salary: dict, description: str, requirements: str):
         self.name = name
         self.area = area
-        self.url = url
-        self.salary = self.__validation_salary(salary)
-        self.description = description
-        self.requirements = requirements
+        self.url = url if url else 'Не указано'
+        self.salary = self._validation_salary(salary)
+        self.description = description if description else 'Не указано'
+        self.requirements = requirements if requirements else 'Не указано'
 
-    def __validation_salary(self, salary: dict | None) -> dict:
+    def _validation_salary(self, salary: dict | None) -> dict:
         if not salary:
             return {"from": 0, "to": 0, "currency": "RUR", "gross": False}
+        else:
+            return salary
+
 
     @classmethod
     def get_vacancy(cls, json_str: dict):
@@ -130,11 +133,3 @@ class Vacancy(BaseVacancy):
             'requirements': self.requirements}
         return data
 
-
-if __name__ == '__main__':
-    hh_api = HeadHunterAPI()
-    hh_vacancies = hh_api.get_vacancies('Python')
-    vacancies_list = Vacancy.cast_to_object_list(hh_vacancies)
-    listik = [vac.salary for vac in vacancies_list]
-    print(listik)
-    print([listik[0] == listik[i] for i in range(len(listik))])
