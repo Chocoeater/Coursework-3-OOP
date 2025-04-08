@@ -60,3 +60,29 @@ def vacancy_normal():
         requirements='Требование'
     )
 
+# Мок для сейвера
+@pytest.fixture
+def mock_saver():
+    saver = MagicMock()
+    saver.get_all_vacancies.return_value = [
+        {
+            'name': 'Python Developer',
+            'url': 'http://example.com/1',
+            'salary': {'from': 100000, 'to': 150000},
+            'description': 'Python job',
+            'requirements': 'Python experience'
+        }
+    ]
+    saver.search_vacancies.return_value = [
+        {
+            'name': 'Found Python Job',
+            'url': 'http://example.com/2',
+            'salary': {'from': 120000, 'to': 180000},
+            'description': 'Python description',
+            'requirements': 'Python requirements'
+        }
+    ]
+    saver.add_vacancy.return_value = True
+    saver.delete_vacancy.return_value = True
+    return saver
+
