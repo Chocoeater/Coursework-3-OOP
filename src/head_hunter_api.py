@@ -39,9 +39,3 @@ class HeadHunterAPI(BaseHeadHunterAPI):
     def get_vacancies(self, keyword, pages: int = 1):
         self._connect_to_api(keyword, pages)
         return self.__vacancies
-
-
-if __name__ == '__main__':
-    hh_api = HeadHunterAPI()
-    hh_vacancies = hh_api.get_vacancies('Python')
-    print(hh_vacancies)
