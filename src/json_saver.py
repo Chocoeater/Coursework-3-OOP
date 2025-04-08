@@ -61,6 +61,7 @@ class JSONSaver(BaseJSONSaver):
         if len(update_vacancies) == old_len_of_vacancies:
             return False
         self._save_vacancies(update_vacancies)
+        return True
 
     def search_vacancies(self, keyword: str = None, salary: int = None) -> List[Dict]:
         """Поиск по вакансиям"""
@@ -71,7 +72,7 @@ class JSONSaver(BaseJSONSaver):
             low = keyword.lower()
             result = [
                 vac for vac in result if (
-                    low in vac.get('description', '').lower() or low in vac.get('requirements', '').lower()
+                    low in vac.get('description', '').lower() or low in vac.get('requirements', '').lower() or low in vac.get('name', '').lower()
                 )
             ]
 
