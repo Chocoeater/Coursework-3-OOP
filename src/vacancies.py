@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 
-from src.head_hunter_api import HeadHunterAPI
 
 
 class BaseVacancy(ABC):
-    __slots__ = ('name', 'area', 'url', 'salary', 'description', 'requirements')
+    __slots__ = ("name", "area", "url", "salary", "description", "requirements")
 
     @abstractmethod
     def _validation_salary(self, salary: dict | None) -> int:
@@ -71,10 +70,10 @@ class Vacancy(BaseVacancy):
     def __init__(self, name: str, area: str, url: str, salary: dict, description: str, requirements: str):
         self.name = name
         self.area = area
-        self.url = url if url else 'Не указано'
+        self.url = url if url else "Не указано"
         self.salary = self._validation_salary(salary)
-        self.description = description if description else 'Не указано'
-        self.requirements = requirements if requirements else 'Не указано'
+        self.description = description if description else "Не указано"
+        self.requirements = requirements if requirements else "Не указано"
 
     def _validation_salary(self, salary: dict | None) -> dict:
         if not salary:
@@ -82,11 +81,16 @@ class Vacancy(BaseVacancy):
         else:
             return salary
 
-
     @classmethod
     def get_vacancy(cls, json_str: dict):
-        return cls(name=json_str['name'], area=json_str['area']['name'], url=json_str['alternate_url'], salary=json_str['salary'],
-                   description=json_str['snippet']['responsibility'], requirements=json_str['snippet']['requirement'])
+        return cls(
+            name=json_str["name"],
+            area=json_str["area"]["name"],
+            url=json_str["alternate_url"],
+            salary=json_str["salary"],
+            description=json_str["snippet"]["responsibility"],
+            requirements=json_str["snippet"]["requirement"],
+        )
 
     @classmethod
     def cast_to_object_list(cls, vacancies: list) -> list:
@@ -95,9 +99,9 @@ class Vacancy(BaseVacancy):
     @staticmethod
     def _get_left_right(left: int | dict, right: int | dict) -> tuple:
         if left:
-            left = left['from']
+            left = left["from"]
         if right:
-            right = right['from']
+            right = right["from"]
         return left, right
 
     def __eq__(self, other):
@@ -129,7 +133,11 @@ class Vacancy(BaseVacancy):
         Возвращает словарь с атрибутами объекта
         :return: Словарь с атрибутами
         """
-        data = {'name': self.name, 'url': self.url, 'salary': self.salary, 'description': self.description,
-            'requirements': self.requirements}
+        data = {
+            "name": self.name,
+            "url": self.url,
+            "salary": self.salary,
+            "description": self.description,
+            "requirements": self.requirements,
+        }
         return data
-

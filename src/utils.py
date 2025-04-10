@@ -4,15 +4,15 @@ from src.vacancies import Vacancy
 
 
 def salary_print(salary: dict):
-    if salary['from'] == 0 and salary['to'] == 0:
-        return 'Не указана'
+    if salary["from"] == 0 and salary["to"] == 0:
+        return "Не указана"
     return f'от {salary["from"]} до {salary["to"]}'
 
 
 def user_interaction():
     saver = JSONSaver()
 
-    print('Добро пожаловать в Vacancy Manager — консольное приложение для поиска, сохранения и управления вакансиями!')
+    print("Добро пожаловать в Vacancy Manager — консольное приложение для поиска, сохранения и управления вакансиями!")
     while True:
         print("\n=== Управление вакансиями ===")
         print("1. Поиск вакансий в API (HeadHunter)")
@@ -48,7 +48,7 @@ def show_saved_vacancies(saver: JSONSaver):
         print("Список вакансий пуст.\n")
         return
 
-    print('\n=== Все вакансии ===')
+    print("\n=== Все вакансии ===")
     for i, vacancy in enumerate(vacancies, 1):
         print(f"{i}. {vacancy.get('name', 'Без названия')}")
         print(f"Зарплата: {salary_print(vacancy.get('salary'))}")
@@ -80,8 +80,13 @@ def search_in_saved_vacancies(saver: JSONSaver):
 def add_vacancy_manually(saver: JSONSaver):
     """Добавляет вакансию через метод класса."""
     print("\nВведите данные вакансии:")
-    vacancy_data = {"name": input("Название: "), "url": input("URL: "), "salary": input("Зарплата: "),
-        "description": input("Описание: "), "requirements": input("Требования: ")}
+    vacancy_data = {
+        "name": input("Название: "),
+        "url": input("URL: "),
+        "salary": input("Зарплата: "),
+        "description": input("Описание: "),
+        "requirements": input("Требования: "),
+    }
     vacancy = Vacancy.get_vacancy(vacancy_data)
     if saver.add_vacancy(vacancy):  # Используем метод класса
         print("✅ Вакансия добавлена!")
@@ -122,17 +127,19 @@ def search_vacancies_in_hh(saver: JSONSaver):
         while True:
             # Выводим текущую страницу (10 вакансий)
             print("\n=== Найденные вакансии ===")
-            for i, vacancy in enumerate(all_vacancies[start_idx:start_idx + 10], start_idx + 1):
+            for i, vacancy in enumerate(all_vacancies[start_idx : start_idx + 10], start_idx + 1):
                 print(vacancy.to_dict())
-                print(f"""
+                print(
+                    f"""
                     {i}
                     {vacancy.name}
                     Ссылка на вакансию: {vacancy.url}
                     Заработная плата: {salary_print(vacancy.salary)}
                     Описание: {vacancy.description}
                     Требования: {vacancy.requirements}
-                    """)
-                print('-' * 40)
+                    """
+                )
+                print("-" * 40)
 
             # Проверяем, есть ли еще вакансии
             if start_idx + 10 >= len(all_vacancies):
