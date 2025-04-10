@@ -36,6 +36,6 @@ class HeadHunterAPI(BaseHeadHunterAPI):
         except RequestException as e:
             print(f"Сетевая ошибка: {e}")
 
-    def get_vacancies(self, keyword, pages: int = 1):
+    def get_vacancies(self, keyword, pages: int = 1) -> list:
         self._connect_to_api(keyword, pages)
         return self.__vacancies

@@ -3,14 +3,14 @@ from src.json_saver import JSONSaver
 from src.vacancies import Vacancy
 
 
-def salary_print(salary: dict):
+def salary_print(salary: dict) -> str:
     """Приводит зарплату к читаемому виду"""
     if salary["from"] == 0 and salary["to"] == 0:
         return "Не указана"
     return f'от {salary["from"]} до {salary["to"]}'
 
 
-def user_interaction():
+def user_interaction() -> None:
     """Основная функция для взаимодействия с пользователем"""
     saver = JSONSaver()
 
@@ -42,7 +42,7 @@ def user_interaction():
             print("Некорректный ввод. Попробуйте снова.")
 
 
-def show_saved_vacancies(saver: JSONSaver):
+def show_saved_vacancies(saver: JSONSaver) -> None:
     """Выводит вакансии из файла"""
     vacancies = saver.get_all_vacancies()
 
@@ -60,7 +60,7 @@ def show_saved_vacancies(saver: JSONSaver):
         print("-" * 40)
 
 
-def search_in_saved_vacancies(saver: JSONSaver):
+def search_in_saved_vacancies(saver: JSONSaver) -> None:
     """Поиск вакансий через метод класса."""
     keyword = input("Введите ключевое слово для поиска: ").strip()
     results = saver.search_vacancies(keyword)
@@ -79,7 +79,7 @@ def search_in_saved_vacancies(saver: JSONSaver):
         print("-" * 40)
 
 
-def add_vacancy_manually(saver: JSONSaver):
+def add_vacancy_manually(saver: JSONSaver) -> None:
     """Добавляет вакансию через метод класса."""
     print("\nВведите данные вакансии:")
     vacancy_data = {
@@ -96,7 +96,7 @@ def add_vacancy_manually(saver: JSONSaver):
         print("❌ Вакансия уже существует или ошибка данных.")
 
 
-def delete_vacancy_interactive(saver: JSONSaver):
+def delete_vacancy_interactive(saver: JSONSaver) -> None:
     """Удаляет вакансию через метод класса."""
     show_saved_vacancies(saver)
     url = input("\nВведите URL вакансии для удаления: ").strip()
@@ -107,7 +107,7 @@ def delete_vacancy_interactive(saver: JSONSaver):
         print("❌ Вакансия не найдена.")
 
 
-def search_vacancies_in_hh(saver: JSONSaver):
+def search_vacancies_in_hh(saver: JSONSaver) -> None:
     """Поиск вакансий с постраничным выводом"""
     hh_api = HeadHunterAPI()
     search_query = input("Введите поисковый запрос: ")
