@@ -4,12 +4,14 @@ from src.vacancies import Vacancy
 
 
 def salary_print(salary: dict):
+    """Приводит зарплату к читаемому виду"""
     if salary["from"] == 0 and salary["to"] == 0:
         return "Не указана"
     return f'от {salary["from"]} до {salary["to"]}'
 
 
 def user_interaction():
+    """Основная функция для взаимодействия с пользователем"""
     saver = JSONSaver()
 
     print("Добро пожаловать в Vacancy Manager — консольное приложение для поиска, сохранения и управления вакансиями!")

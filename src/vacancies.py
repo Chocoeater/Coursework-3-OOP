@@ -1,18 +1,9 @@
 from abc import ABC, abstractmethod
 
 
-
 class BaseVacancy(ABC):
     __slots__ = ("name", "area", "url", "salary", "description", "requirements")
 
-    @abstractmethod
-    def _validation_salary(self, salary: dict | None) -> int:
-        """
-        Валидирует значения заработной платы. Если заработная плата не задана, возвращает 0
-        :param salary: Заработная плата
-        :return: 0 или значение заработной платы
-        """
-        pass
 
     @classmethod
     @abstractmethod
@@ -68,14 +59,45 @@ class BaseVacancy(ABC):
 
 class Vacancy(BaseVacancy):
     def __init__(self, name: str, area: str, url: str, salary: dict, description: str, requirements: str):
-        self.name = name
-        self.area = area
-        self.url = url if url else "Не указано"
-        self.salary = self._validation_salary(salary)
-        self.description = description if description else "Не указано"
-        self.requirements = requirements if requirements else "Не указано"
+        self.name = self.__validate_name(name)
+        self.area = self.__validate_area(area)
+        self.url = self.__validate_url(url)
+        self.salary = self.__validation_salary(salary)
+        self.description = self.__validate_description(description)
+        self.requirements = self.__validate_requirements(requirements)
 
-    def _validation_salary(self, salary: dict | None) -> dict:
+    @staticmethod
+    def __validate_description(description: str) -> str:
+        if not description or not isinstance(description, str):
+            return "Не указано"
+        return description.strip()
+
+    @staticmethod
+    def __validate_requirements(requirements: str) -> str:
+        if not requirements or not isinstance(requirements, str):
+            return "Не указано"
+        return requirements.strip()
+
+    @staticmethod
+    def __validate_name(name: str) -> str:
+        if not name or not isinstance(name, str):
+            raise ValueError("Название вакансии должно быть непустой строкой.")
+        return name.strip()
+
+    @staticmethod
+    def __validate_area(area: str) -> str:
+        if not area or not isinstance(area, str):
+            raise ValueError("Название региона должно быть непустой строкой.")
+        return area.strip()
+
+    @staticmethod
+    def __validate_url(url: str) -> str:
+        if not url or not isinstance(url, str):
+            return "Не указано"
+        return url.strip()
+
+    @staticmethod
+    def __validation_salary(salary: dict | None) -> dict:
         if not salary:
             return {"from": 0, "to": 0, "currency": "RUR", "gross": False}
         else:
@@ -83,14 +105,9 @@ class Vacancy(BaseVacancy):
 
     @classmethod
     def get_vacancy(cls, json_str: dict):
-        return cls(
-            name=json_str["name"],
-            area=json_str["area"]["name"],
-            url=json_str["alternate_url"],
-            salary=json_str["salary"],
-            description=json_str["snippet"]["responsibility"],
-            requirements=json_str["snippet"]["requirement"],
-        )
+        return cls(name=json_str["name"], area=json_str["area"]["name"], url=json_str["alternate_url"],
+            salary=json_str["salary"], description=json_str["snippet"]["responsibility"],
+            requirements=json_str["snippet"]["requirement"], )
 
     @classmethod
     def cast_to_object_list(cls, vacancies: list) -> list:
@@ -133,11 +150,6 @@ class Vacancy(BaseVacancy):
         Возвращает словарь с атрибутами объекта
         :return: Словарь с атрибутами
         """
-        data = {
-            "name": self.name,
-            "url": self.url,
-            "salary": self.salary,
-            "description": self.description,
-            "requirements": self.requirements,
-        }
+        data = {"name": self.name, "url": self.url, "salary": self.salary, "description": self.description,
+            "requirements": self.requirements, }
         return data
