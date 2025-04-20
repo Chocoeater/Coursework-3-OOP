@@ -2,7 +2,6 @@ import pytest
 from src.head_hunter_api import HeadHunterAPI
 from unittest.mock import patch, MagicMock
 from src.vacancies import Vacancy
-from src.json_saver import JSONSaver
 
 
 @pytest.fixture

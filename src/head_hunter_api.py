@@ -19,6 +19,7 @@ class HeadHunterAPI(BaseHeadHunterAPI):
         self.__headers = {"User-Agent": "HH-User-Agent"}
         self.__params = {"text": "", "only_with_vacancies": True, "page": 0, "per_page": 100}
         self.__employers = []
+        self.__vacancies = dict()
 
     def _connect_to_api(self, keyword, pages: int = 1):
         self.__params["text"] = keyword
@@ -39,5 +40,21 @@ class HeadHunterAPI(BaseHeadHunterAPI):
     def get_employers(self, keyword, pages: int = 1) -> list:
         self._connect_to_api(keyword, pages)
         return self.__employers
+
+    def get_vacancies(self):
+        try:
+            i = 1
+            for emp in self.__employers:
+                response = requests.get(emp['vacancies_url'])
+                response.raise_for_status()
+                vacancies = response.json().get("items", [])
+                self.__vacancies[f'{i}'] = vacancies
+                i += 1
+        except HTTPError as e:
+            print(f"Ошибка API: {e}")
+        except RequestException as e:
+            print(f"Сетевая ошибка: {e}")
+        return self.__vacancies
+
 
 
