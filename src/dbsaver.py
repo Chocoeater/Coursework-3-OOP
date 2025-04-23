@@ -9,7 +9,7 @@ class DBSaver:
         self.params = config()
         self.dbname = 'headhunter'
 
-    def create_database(self):
+    def create_database(self) -> None:
         conn = psycopg2.connect(dbname='postgres', **self.params)
         conn.autocommit = True
         cur = conn.cursor()
@@ -51,7 +51,7 @@ class DBSaver:
         conn.commit()
         conn.close()
 
-    def save_to_database(self, employers, vacancies):
+    def save_to_database(self, employers, vacancies) -> None:
         """Сохраняет данные в базу"""
         conn = psycopg2.connect(dbname=f'{self.dbname}', **self.params)
 

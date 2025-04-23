@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from src.dbsaver import DBSaver
+from typing import List, Tuple, Optional
 from src.config import config
 import psycopg2
 
@@ -8,27 +8,27 @@ class BaseDBManager(ABC):
     """Абстрактный класс для задания необходимого интерфейса дочерним классам"""
 
     @abstractmethod
-    def get_companies_and_vacancies_count(self):
+    def get_companies_and_vacancies_count(self) -> List[Tuple[str, int]]:
         """Получает список всех компаний и количество вакансий у каждой компании."""
         pass
 
     @abstractmethod
-    def get_all_vacancies(self):
+    def get_all_vacancies(self) -> List[Tuple[str, str, Optional[int], str]]:
         """Получает список всех вакансий с указанием названия компании, названия вакансии и зарплаты и ссылки на вакансию."""
         pass
 
     @abstractmethod
-    def get_avg_salary(self):
+    def get_avg_salary(self) -> List[Tuple[Optional[float]]]:
         """Получает среднюю зарплату по вакансиям."""
         pass
 
     @abstractmethod
-    def get_vacancies_with_higher_salary(self, avg_salary: float):
+    def get_vacancies_with_higher_salary(self, avg_salary: float) -> List[Tuple[str, str, Optional[int], str]]:
         """Получает список всех вакансий, у которых зарплата выше средней по всем вакансиям."""
         pass
 
     @abstractmethod
-    def get_vacancies_with_keyword(self, keyword: str):
+    def get_vacancies_with_keyword(self, keyword: str) -> List[Tuple[str, str, Optional[int], str]]:
         """Получает список всех вакансий, в названии которых содержатся переданные в метод слова, например python."""
         pass
 

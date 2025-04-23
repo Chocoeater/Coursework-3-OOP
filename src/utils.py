@@ -4,7 +4,7 @@ from src.head_hunter_api import HeadHunterAPI
 from src.vacancies import Vacancy
 
 
-def print_vacancies(vacancies):
+def print_vacancies(vacancies) -> None:
     for vac in vacancies:
         print('-' * 50)
         print(f"Компания: {vac[0]}")
@@ -14,7 +14,7 @@ def print_vacancies(vacancies):
     print('-' * 50)
 
 
-def user_interface():
+def user_interface() -> None:
     print('Добро пожаловать в систему вакансий HeadHunter!')
 
     keyword = input('Введите ключевое слово для поиска работодателей (Например, Сбербанк или Яндекс): ')
