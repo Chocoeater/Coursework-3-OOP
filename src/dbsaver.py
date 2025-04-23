@@ -26,7 +26,7 @@ class DBSaver:
                 """
                 CREATE TABLE employers (
                     employers_id SERIAL PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
+                    name_employer VARCHAR(255) NOT NULL,
                     url VARCHAR(255)
                 )
                 """
@@ -38,7 +38,7 @@ class DBSaver:
                 CREATE TABLE vacancies (
                     vacancy_id SERIAL PRIMARY KEY,
                     employers_id INT REFERENCES employers(employers_id),
-                    name VARCHAR(255) NOT NULL,
+                    name_vacancy VARCHAR(255) NOT NULL,
                     area VARCHAR(255),
                     url VARCHAR(255),
                     salary INT,
@@ -59,7 +59,7 @@ class DBSaver:
             for emp in employers:
                 cur.execute(
                     """
-                    INSERT INTO employers (name, url)
+                    INSERT INTO employers (name_employer, url)
                     VALUES (%s, %s)
                     RETURNING employers_id
                     """,
@@ -69,7 +69,7 @@ class DBSaver:
                 for vac in vacancies[f'{employer_id}']:
                     cur.execute(
                         """
-                        INSERT INTO vacancies (employers_id, name, area, url, salary, description, requirements)
+                        INSERT INTO vacancies (employers_id, name_vacancy, area, url, salary, description, requirements)
                         VALUES (%s, %s, %s, %s, %s, %s, %s)
                         """,
                         (employer_id, vac.name, vac.area, vac.url, vac.salary['from'], vac.description, vac.requirements)
