@@ -92,8 +92,9 @@ class DBManager(BaseDBManager):
         with conn.cursor() as cur:
             cur.execute(
                 f"""
-                SELECT v.name_vacancy
+                SELECT e.name_employer, v.name_vacancy, v.salary, v.url
                 FROM vacancies v
+                LEFT JOIN employers e USING(employers_id)
                 WHERE v.salary > {avg_salary}
                 """
             )
@@ -107,8 +108,9 @@ class DBManager(BaseDBManager):
         with conn.cursor() as cur:
             cur.execute(
                 f"""
-                SELECT name_vacancy, salary, url
-                FROM vacancies
+                SELECT e.name_employer, v.name_vacancy, v.salary, v.url
+                FROM vacancies v
+                LEFT JOIN employers e USING(employers_id)
                 WHERE LOWER(name_vacancy) LIKE '%{keyword.lower()}%'
                 ORDER BY salary DESC
                 """
